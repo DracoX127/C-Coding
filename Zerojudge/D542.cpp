@@ -3,43 +3,41 @@
 #include <algorithm>
 using namespace std;
 
-const int MAXN = 500000 + 5;
+const int MaxN = 5e5 + 1;
+const int MaxA = 1e9;
 
-long long BIT[MAXN];  
-int bit, N;               
+int N, uN, num[MaxN], srt[MaxN];
 
-void bit_add(int idx, long long v) {
-    while (idx <= bit) {
-        BIT[idx] += v;
-        idx += idx & -idx;
+int RangeQuery(vector<int>& BIT, int p){
+    int ret = 0;
+    while(0 < p){
+        ret += BIT[p];
+        p -= p & -p;
+    }
+    return ret;
+}
+
+void PointUpdate(vector<int>& BIT, int p, int x){
+    while(p < uN){
+        BIT[p] += x;
+        p += p & -p;
     }
 }
 
-long long bit_sum(int idx) {
-    long long res = 0;
-    while (idx > 0) {
-        res += BIT[idx];
-        idx -= idx & -idx;
-    }
-    return res;
-}
-
-int main() {
-    while (cin >> N) {
-        vector<long long> A(N);
-        for (int n = 0; n < N; n++) cin >> A[n];
-        vector<long long> B = A;
-        sort(B.begin(), B.end());
-        B.erase(unique(B.begin(), B.end()), B.end());
-        vector<int> comp(N);
-        for (int n = 0; n < N; n++) comp[n] = int(lower_bound(B.begin(), B.end(), A[n]) - B.begin()) + 1;
-        bit = (int)B.size();
-        for (int n = 0; n <= bit; n++) BIT[n] = 0;
+int main(){
+    while(cin >> N && N > 0){
+        for(int n = 1; n <= N; n++){
+            cin >> num[n];
+            srt[n] = num[n];
+        }
+        sort(srt + 1, srt + N + 1);
+        uN = unique(srt + 1, srt + N + 1) - srt;
+        vector<int> BIT(uN);
         long long ans = 0;
-        for (int n = N - 1; n >= 0; n--) {
-            int x = comp[n];
-            ans += bit_sum(x - 1); 
-            bit_add(x, 1);
+        for(int n = 1; n <= N; n++){
+            int p = lower_bound(srt + 1, srt + uN, num[n]) - srt;
+            ans += n - 1 - RangeQuery(BIT, p);
+            PointUpdate(BIT, p, 1);
         }
         cout << ans << "\n";
     }
