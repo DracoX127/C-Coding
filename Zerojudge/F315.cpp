@@ -3,7 +3,7 @@
 #include <algorithm>
 using namespace std;
 
-const int MaxN = 1e5 + 1;
+const int MaxN = 2e5 + 1;
 
 int N, uN, num[MaxN * 2];
 
@@ -40,7 +40,7 @@ int main(){
         Inv_pair[n] = RangeQuery(BIT, num[n] - 1);
         PointUpdate(BIT, num[n], 1);
     }
-    int ans = 0;
+    long long ans = 0;
     for(int n = 1; n <= N; n++){
         ans += Inv_pair[idx[n].first] - Inv_pair[idx[n].second]; 
     }
