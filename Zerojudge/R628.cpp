@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <algorithm
+#include <algorithm>
 using namespace std ;
 
 const int MaxN = 2e5+1 ;
